@@ -2,6 +2,7 @@ package heitor.projetofinal.meli.domain.club;
 
 import heitor.projetofinal.meli.domain.state.State;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Table(name = "club")
@@ -15,7 +16,7 @@ public class Club {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
     private String name;
     @Enumerated(EnumType.STRING)
     private State state;

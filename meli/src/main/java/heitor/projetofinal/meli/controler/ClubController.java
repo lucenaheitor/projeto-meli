@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -28,10 +29,10 @@ public class ClubController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CreateClubDTO> register(@RequestBody @Valid CreateClubDTO dto , UriComponentsBuilder uriBuilder){
+    public ResponseEntity<CreateClubDTO> register(@RequestBody @Valid CreateClubDTO dto, UriComponentsBuilder uriBuilder){
 
         CreateClubDTO clubDTO = clubService.register(dto);
-        URI address = uriBuilder.path("/clubs/{id}").buildAndExpand(clubDTO.getNome().toURI);
+        URI address = uriBuilder.path("/clubs/{id}").buildAndExpand(clubDTO.getNome()).toUri();
 
         return  ResponseEntity.created(address).body(clubDTO);
     }
