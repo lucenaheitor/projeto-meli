@@ -1,4 +1,4 @@
-package heitor.projetofinal.meli.domain.club;
+package heitor.projetofinal.meli.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import heitor.projetofinal.meli.domain.state.State;

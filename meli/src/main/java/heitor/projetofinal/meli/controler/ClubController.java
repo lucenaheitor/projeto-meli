@@ -1,17 +1,14 @@
 package heitor.projetofinal.meli.controler;
 
-import heitor.projetofinal.meli.domain.club.ClubRepository;
-import heitor.projetofinal.meli.domain.club.CreateClubDTO;
-import heitor.projetofinal.meli.infra.service.ClubService;
+import heitor.projetofinal.meli.domain.dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.repository.ClubRepository;
+import heitor.projetofinal.meli.domain.dto.CreateClubDTO;
+import heitor.projetofinal.meli.service.ClubService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriBuilder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -35,5 +32,11 @@ public class ClubController {
         URI address = uriBuilder.path("/clubs/{id}").buildAndExpand(clubDTO.getNome()).toUri();
 
         return  ResponseEntity.created(address).body(clubDTO);
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity update(@RequestBody @Valid UpdateClubDTO upadeDTO){
+
     }
 }
