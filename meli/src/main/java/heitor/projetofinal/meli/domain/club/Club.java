@@ -20,6 +20,13 @@ public class Club {
     private String name;
     @Enumerated(EnumType.STRING)
     private State state;
+    private boolean ativo;
+
+
+
+    public void delete(){
+        this.ativo = true;
+    }
 
 
 

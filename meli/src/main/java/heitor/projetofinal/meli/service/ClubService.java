@@ -1,6 +1,7 @@
 package heitor.projetofinal.meli.service;
 
 import heitor.projetofinal.meli.domain.club.Club;
+import heitor.projetofinal.meli.domain.dto.DetailClub;
 import heitor.projetofinal.meli.domain.dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
@@ -10,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import javax.swing.text.html.parser.Entity;
+import java.util.Optional;
 
 
 @Service
@@ -33,6 +38,13 @@ public class ClubService {
                  .map(club -> modelMapper.map(club, ListClubDTO.class));
     }
 
+    public DetailClub datail(Long id){
+        Club club = clubRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entity not found"));
+        return modelMapper.map( club, DetailClub.class);
+    }
+
+
     public UpdateClubDTO update( UpdateClubDTO dto){
         Club club = modelMapper.map(dto, Club.class);
         clubRepository.getReferenceById(club.getId());
@@ -40,5 +52,18 @@ public class ClubService {
         return modelMapper.map(club, UpdateClubDTO.class);
     }
 
+    public void delete(@PathVariable Long id){
+      Optional<Club>  club =   clubRepository.findById(id);
+      if(club.isPresent()){
+          Club clubTenp =  club.get();
+          clubTenp.setAtivo(false);
+          clubRepository.save(clubTenp);
+      }else{
+          throw new RuntimeException("Club not found");
+      }
+
+
+
+    }
 
 }

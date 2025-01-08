@@ -1,5 +1,6 @@
 package heitor.projetofinal.meli.controler;
 
+import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
@@ -52,4 +53,13 @@ public class ClubController {
 
          return ResponseEntity.ok(clubDTO);
     }
+
+    @DeleteMapping("/{id")
+    @Transactional
+    public ResponseEntity delete(@PathVariable Long id){
+        clubService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
