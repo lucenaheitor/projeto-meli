@@ -1,11 +1,11 @@
 package heitor.projetofinal.meli.service;
 
 import heitor.projetofinal.meli.domain.club.Club;
-import heitor.projetofinal.meli.domain.dto.DetailClub;
-import heitor.projetofinal.meli.domain.dto.ListClubDTO;
-import heitor.projetofinal.meli.domain.dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.club.dto.DetailClub;
+import heitor.projetofinal.meli.domain.club.dto.ListClubDTO;
+import heitor.projetofinal.meli.domain.club.dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
-import heitor.projetofinal.meli.domain.dto.CreateClubDTO;
+import heitor.projetofinal.meli.domain.club.dto.CreateClubDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.Optional;
 
 

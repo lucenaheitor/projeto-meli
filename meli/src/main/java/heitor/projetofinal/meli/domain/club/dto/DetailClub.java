@@ -1,4 +1,4 @@
-package heitor.projetofinal.meli.domain.dto;
+package heitor.projetofinal.meli.domain.club.dto;
 
 import heitor.projetofinal.meli.domain.state.State;
 

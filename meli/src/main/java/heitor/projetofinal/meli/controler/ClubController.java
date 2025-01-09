@@ -1,10 +1,10 @@
 package heitor.projetofinal.meli.controler;
 
-import heitor.projetofinal.meli.domain.club.Club;
-import heitor.projetofinal.meli.domain.dto.ListClubDTO;
-import heitor.projetofinal.meli.domain.dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.club.dto.DetailClub;
+import heitor.projetofinal.meli.domain.club.dto.ListClubDTO;
+import heitor.projetofinal.meli.domain.club.dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
-import heitor.projetofinal.meli.domain.dto.CreateClubDTO;
+import heitor.projetofinal.meli.domain.club.dto.CreateClubDTO;
 import heitor.projetofinal.meli.service.ClubService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -59,6 +59,12 @@ public class ClubController {
     public ResponseEntity delete(@PathVariable Long id){
         clubService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DetailClub>  detail(@PathVariable Long id ){
+        DetailClub club =  clubService.datail(id);
+        return ResponseEntity.ok(club);
     }
 
 
