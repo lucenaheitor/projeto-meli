@@ -5,11 +5,11 @@ import heitor.projetofinal.meli.domain.state.State;
 
 public class ListClubDTO {
 
-    private String nome;
+    private String name;
     private State state;
 
-    public ListClubDTO(String nome, State state) {
-        this.nome = nome;
+    public ListClubDTO(String name, State state) {
+        this.name = name;
         this.state = state;
     }
 
@@ -17,12 +17,12 @@ public class ListClubDTO {
         this(club.getName(), club.getState());
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public State getState() {

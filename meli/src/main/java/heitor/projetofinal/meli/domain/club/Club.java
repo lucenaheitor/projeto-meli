@@ -24,11 +24,4 @@ public class Club {
     private LocalDate date;
 
     private boolean ativo = true;
-
-
-
-
-
-
-
 }
