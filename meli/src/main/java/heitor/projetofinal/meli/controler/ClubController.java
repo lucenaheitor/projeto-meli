@@ -54,7 +54,7 @@ public class ClubController {
          return ResponseEntity.ok(clubDTO);
     }
 
-    @DeleteMapping("/{id")
+    @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity delete(@PathVariable Long id){
         clubService.delete(id);
