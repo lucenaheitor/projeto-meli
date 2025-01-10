@@ -34,7 +34,7 @@ public class ClubController {
     public ResponseEntity<CreateClubDTO> register(@RequestBody @Valid CreateClubDTO dto, UriComponentsBuilder uriBuilder){
 
         CreateClubDTO clubDTO = clubService.register(dto);
-        URI address = uriBuilder.path("/clubs/{id}").buildAndExpand(clubDTO.getNome()).toUri();
+        URI address = uriBuilder.path("/clubs/{id}").buildAndExpand(clubDTO.getName()).toUri();
 
         return  ResponseEntity.created(address).body(clubDTO);
     }
@@ -42,7 +42,7 @@ public class ClubController {
 
     @GetMapping
     public ResponseEntity<Page<ListClubDTO>>listClub(@PageableDefault(size = 5, sort = {"nome"}) Pageable pageable){
-        Page page = clubRepository.findAll(pageable);
+        Page page = clubService.getClub(pageable);
          return ResponseEntity.ok(page);
     }
 

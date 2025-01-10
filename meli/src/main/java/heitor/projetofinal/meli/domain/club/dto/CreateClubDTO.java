@@ -2,27 +2,22 @@ package heitor.projetofinal.meli.domain.club.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import heitor.projetofinal.meli.domain.state.State;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.PastOrPresent;
+import lombok.*;
 
 import java.time.LocalDate;
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class CreateClubDTO {
     @NotNull
-    String nome;
+    String name;
 
     @NotNull
     State state;
 
     @NotNull
-    @Future
-    @JsonFormat(pattern = "dd/mm/yyyy")
+    @PastOrPresent
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     LocalDate date;
+
 }

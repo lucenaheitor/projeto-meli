@@ -5,12 +5,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Table(name = "club")
 @Entity(name =  "Club")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @EqualsAndHashCode(of = "id")
 public class Club {
 
@@ -18,15 +17,17 @@ public class Club {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     @Enumerated(EnumType.STRING)
     private State state;
-    private boolean ativo;
+
+    private LocalDate date;
+
+    private boolean ativo = true;
 
 
 
-    public void delete(){
-        this.ativo = true;
-    }
+
 
 
 
