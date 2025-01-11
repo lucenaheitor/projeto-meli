@@ -32,10 +32,10 @@ public class ClubService {
         return  modelMapper.map(club, CreateClubDTO.class);
     }
 
-    public Page<ListClubDTO> getClub(Pageable pageable){
-         return  clubRepository.findAll(pageable)
-                 .map(club -> modelMapper.map(club, ListClubDTO.class));
-    }
+   public Page<ListClubDTO> list(Pageable pageable){
+        return  clubRepository.findAll(pageable)
+                .map(club -> modelMapper.map(club, ListClubDTO.class));
+   }
 
     public DetailClub datail(Long id){
         Club club = clubRepository.findById(id)

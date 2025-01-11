@@ -8,6 +8,7 @@ import heitor.projetofinal.meli.domain.club.dto.CreateClubDTO;
 import heitor.projetofinal.meli.service.ClubService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,8 @@ public class ClubController {
     private ClubService clubService;
 
 
+
+
     @PostMapping
     @Transactional
     public ResponseEntity<CreateClubDTO> register(@RequestBody @Valid CreateClubDTO dto, UriComponentsBuilder uriBuilder){
@@ -39,11 +42,16 @@ public class ClubController {
         return  ResponseEntity.created(address).body(clubDTO);
     }
 
-
     @GetMapping
-    public ResponseEntity<Page<ListClubDTO>>listClub(@PageableDefault(size = 5, sort = {"nome"}) Pageable pageable){
-        Page page = clubService.getClub(pageable);
-         return ResponseEntity.ok(page);
+    public ResponseEntity<Page<ListClubDTO>> listClub( @PageableDefault(size = 5, sort = "name") Pageable pageable){
+        Page page = clubService.list(pageable);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DetailClub>  detail(@PathVariable Long id ){
+        DetailClub club =  clubService.datail(id);
+        return ResponseEntity.ok(club);
     }
 
     @PutMapping
@@ -61,11 +69,7 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DetailClub>  detail(@PathVariable Long id ){
-        DetailClub club =  clubService.datail(id);
-        return ResponseEntity.ok(club);
-    }
+
 
 
 }

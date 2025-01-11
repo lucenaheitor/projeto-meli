@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Table(name = "club")
 @Entity(name =  "Club")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Club {
 
