@@ -30,8 +30,6 @@ public class ClubController {
     private ClubService clubService;
 
 
-
-
     @PostMapping
     @Transactional
     public ResponseEntity<CreateClubDTO> register(@RequestBody @Valid CreateClubDTO dto, UriComponentsBuilder uriBuilder){
@@ -54,12 +52,12 @@ public class ClubController {
         return ResponseEntity.ok(club);
     }
 
+
     @PutMapping
     @Transactional
-    public ResponseEntity update(@RequestBody @Valid UpdateClubDTO upadeDTO){
-         UpdateClubDTO clubDTO = clubService.update(upadeDTO);
-
-         return ResponseEntity.ok(clubDTO);
+    public ResponseEntity update( @RequestBody @Valid UpdateClubDTO upadeDTO){
+         UpdateClubDTO updatebDTO = clubService.update(upadeDTO);
+         return ResponseEntity.ok(updatebDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -68,8 +66,5 @@ public class ClubController {
         clubService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 
 }

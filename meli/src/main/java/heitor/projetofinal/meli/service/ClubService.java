@@ -44,11 +44,11 @@ public class ClubService {
     }
 
 
-    public UpdateClubDTO update( UpdateClubDTO dto){
-        Club club = modelMapper.map(dto, Club.class);
+    public UpdateClubDTO update(UpdateClubDTO dto){
+        Club club =  modelMapper.map(dto, Club.class);
         clubRepository.getReferenceById(club.getId());
-        clubRepository.save(club);
-        return modelMapper.map(club, UpdateClubDTO.class);
+        club = clubRepository.save(club);
+        return  modelMapper.map(club, UpdateClubDTO.class);
     }
 
     public void delete(@PathVariable Long id){

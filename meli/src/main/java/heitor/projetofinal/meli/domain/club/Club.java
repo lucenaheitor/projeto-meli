@@ -2,7 +2,6 @@ package heitor.projetofinal.meli.domain.club;
 
 import heitor.projetofinal.meli.domain.state.State;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;

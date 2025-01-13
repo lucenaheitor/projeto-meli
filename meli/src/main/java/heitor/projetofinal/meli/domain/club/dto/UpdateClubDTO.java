@@ -2,17 +2,18 @@ package heitor.projetofinal.meli.domain.club.dto;
 
 
 import heitor.projetofinal.meli.domain.state.State;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class UpdateClubDTO {
-
-    String  nome;
-    State state;
+@AllArgsConstructor
+public class UpdateClubDTO{
+        @NotNull
+   private  Long id;
+   private String Name;
+   private State state;
 }
