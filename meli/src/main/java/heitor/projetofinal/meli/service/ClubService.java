@@ -1,5 +1,6 @@
 package heitor.projetofinal.meli.service;
 
+import heitor.projetofinal.meli.controler.exception_club.ValidationClub;
 import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
 import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,9 +27,15 @@ public class ClubService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private List<ValidationClub> validationClubs;
+
 
     public CreateClubDTO register(CreateClubDTO dto){
         Club club = modelMapper.map(dto, Club.class);
+
+        validationClubs.forEach( v  ->  v.validate(dto));
+
         club = clubRepository.save(club);
         return  modelMapper.map(club, CreateClubDTO.class);
     }

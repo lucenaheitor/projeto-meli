@@ -50,6 +50,7 @@ public class ClubController {
         DetailClub club =  clubService.datail(id);
         return ResponseEntity.ok(club);
     }
+
     @PutMapping
     @Transactional
     public  ResponseEntity uodate(@RequestBody @Valid UpdateClubDTO dto){
