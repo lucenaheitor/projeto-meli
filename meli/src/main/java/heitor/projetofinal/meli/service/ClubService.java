@@ -1,11 +1,11 @@
 package heitor.projetofinal.meli.service;
 
 import heitor.projetofinal.meli.domain.club.Club;
-import heitor.projetofinal.meli.domain.club.dto.DetailClub;
-import heitor.projetofinal.meli.domain.club.dto.ListClubDTO;
-import heitor.projetofinal.meli.domain.club.dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
+import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
-import heitor.projetofinal.meli.domain.club.dto.CreateClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,10 +43,9 @@ public class ClubService {
         return modelMapper.map( club, DetailClub.class);
     }
 
-
     public UpdateClubDTO update(UpdateClubDTO dto){
-        Club club =  modelMapper.map(dto, Club.class);
-        clubRepository.getReferenceById(club.getId());
+        Club club =  clubRepository.getReferenceById(dto.getId());
+        modelMapper.map(dto, club);
         club = clubRepository.save(club);
         return  modelMapper.map(club, UpdateClubDTO.class);
     }

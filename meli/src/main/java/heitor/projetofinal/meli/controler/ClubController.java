@@ -1,14 +1,13 @@
 package heitor.projetofinal.meli.controler;
 
-import heitor.projetofinal.meli.domain.club.dto.DetailClub;
-import heitor.projetofinal.meli.domain.club.dto.ListClubDTO;
-import heitor.projetofinal.meli.domain.club.dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
+import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
-import heitor.projetofinal.meli.domain.club.dto.CreateClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
 import heitor.projetofinal.meli.service.ClubService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,13 +50,12 @@ public class ClubController {
         DetailClub club =  clubService.datail(id);
         return ResponseEntity.ok(club);
     }
-
-
     @PutMapping
     @Transactional
-    public ResponseEntity update( @RequestBody @Valid UpdateClubDTO upadeDTO){
-         UpdateClubDTO updatebDTO = clubService.update(upadeDTO);
-         return ResponseEntity.ok(updatebDTO);
+    public  ResponseEntity uodate(@RequestBody @Valid UpdateClubDTO dto){
+        UpdateClubDTO clubDTO = clubService.update(dto);
+        return ResponseEntity.ok(clubDTO);
+
     }
 
     @DeleteMapping("/{id}")
