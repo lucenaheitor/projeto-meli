@@ -1,9 +1,11 @@
 package heitor.projetofinal.meli.controler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
 import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
 import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.state.State;
 import heitor.projetofinal.meli.service.ClubService;
 import org.junit.jupiter.api.Assertions;
@@ -27,8 +29,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -92,7 +93,18 @@ class ClubControllerTest {
     }
 
     @Test
-    void uodate() {
+    void uodate() throws Exception {
+        UpdateClubDTO testDTO = new UpdateClubDTO();
+        testDTO.setId(1L);
+        testDTO.setName("test");
+        testDTO.setState(State.SP);
+        testDTO.setAtivo(true);
+
+        when(clubService.datail(any())).thenReturn();
+
+        var response = mockMvc.perform(put("/clubs/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testDTO))
     }
 
     @Test

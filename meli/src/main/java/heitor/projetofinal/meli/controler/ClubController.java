@@ -53,7 +53,7 @@ public class ClubController {
 
     @PutMapping
     @Transactional
-    public  ResponseEntity uodate(@RequestBody @Valid UpdateClubDTO dto){
+    public  ResponseEntity update(@RequestBody @Valid UpdateClubDTO dto){
         UpdateClubDTO clubDTO = clubService.update(dto);
         return ResponseEntity.ok(clubDTO);
 
