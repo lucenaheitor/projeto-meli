@@ -2,13 +2,12 @@ package heitor.projetofinal.meli.domain.match;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import heitor.projetofinal.meli.domain.club.Club;
-import heitor.projetofinal.meli.domain.state.State;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 
-@Table(name = "match")
+@Table(name = "matches")
 @Entity(name = "Match")
 @Getter
 @Setter
