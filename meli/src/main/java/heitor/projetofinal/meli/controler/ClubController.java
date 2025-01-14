@@ -47,7 +47,7 @@ public class ClubController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DetailClub>  detail(@PathVariable Long id ){
-        DetailClub club =  clubService.datail(id);
+        DetailClub club =  clubService.detail(id);
         return ResponseEntity.ok(club);
     }
 

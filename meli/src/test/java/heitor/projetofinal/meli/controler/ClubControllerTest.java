@@ -2,10 +2,12 @@ package heitor.projetofinal.meli.controler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
 import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
 import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.state.State;
 import heitor.projetofinal.meli.service.ClubService;
 import org.junit.jupiter.api.Assertions;
@@ -28,8 +30,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -42,6 +48,9 @@ class ClubControllerTest {
     private ClubService clubService;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ClubRepository clubRepository;
 
     @Test
     void register() throws Exception {
@@ -84,7 +93,7 @@ class ClubControllerTest {
         detail.setDate(LocalDate.of(1984, 07, 23));
         detail.setAtivo(true);
 
-        when(clubService.datail(any())).thenReturn(detail);
+        when(clubService.detail(any())).thenReturn(detail);
 
         var response = mockMvc.perform(get("/clubs/1"))
                 .andReturn().getResponse();
@@ -93,21 +102,53 @@ class ClubControllerTest {
     }
 
     @Test
-    void uodate() throws Exception {
+    void update() throws Exception {
         UpdateClubDTO testDTO = new UpdateClubDTO();
         testDTO.setId(1L);
         testDTO.setName("test");
         testDTO.setState(State.SP);
         testDTO.setAtivo(true);
 
-        when(clubService.datail(any())).thenReturn();
+        UpdateClubDTO updateDTO = new UpdateClubDTO(1L, "test mudado", State.PR, true);
+        when(clubService.update(any(UpdateClubDTO.class))).thenReturn(updateDTO);
 
-        var response = mockMvc.perform(put("/clubs/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testDTO))
+        var response  = mockMvc.perform(put("/clubs/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(testDTO)));
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.state").value("SP"))
+                .andExpect(jsonPath("$.ativo").value(true));
+
+
+        verify(clubService).update(argThat(dto ->
+                        dto.getId().equals(1L) &&
+                        dto.getName().equals("test mudado") &&
+                        dto.getState().equals(State.SP) && dto.isAtivo()
+
+
+                ));
+
+
     }
 
     @Test
     void delete() {
+        Club club = new Club();
+        club.setId(1L);
+        club.setName("test");
+        club.setState(State.SP);
+        club.setDate(LocalDate.of(1984, 07, 23));
+        club.setAtivo(true);
+
+        if(club.isAtivo()){
+            clubService.delete(1L);
+            club.setAtivo(false);
+        }
+
+        verify(clubService).delete(1L);
+
     }
 }

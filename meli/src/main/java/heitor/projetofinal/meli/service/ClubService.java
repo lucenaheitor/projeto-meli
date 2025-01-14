@@ -45,7 +45,7 @@ public class ClubService {
                 .map(club -> modelMapper.map(club, ListClubDTO.class));
    }
 
-    public DetailClub datail(Long id){
+    public DetailClub detail(Long id){
         Club club = clubRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Entity not found"));
         return modelMapper.map( club, DetailClub.class);
