@@ -2,6 +2,7 @@ package heitor.projetofinal.meli.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
+import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
 import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.state.State;
 import heitor.projetofinal.meli.service.ClubService;
@@ -74,7 +75,20 @@ class ClubControllerTest {
     }
 
     @Test
-    void detail() {
+    void detail() throws Exception {
+        DetailClub detail = new DetailClub();
+        detail.setId(1L);
+        detail.setName("test");
+        detail.setState(State.SP);
+        detail.setDate(LocalDate.of(1984, 07, 23));
+        detail.setAtivo(true);
+
+        when(clubService.datail(any())).thenReturn(detail);
+
+        var response = mockMvc.perform(get("/clubs/1"))
+                .andReturn().getResponse();
+
+        Assertions.assertEquals(200, response.getStatus());
     }
 
     @Test
