@@ -68,8 +68,6 @@ public class ClubService {
           throw new RuntimeException("Club not found");
       }
 
-
-
     }
 
 }
