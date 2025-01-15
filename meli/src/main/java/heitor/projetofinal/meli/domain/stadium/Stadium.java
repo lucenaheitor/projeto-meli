@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Stadium {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

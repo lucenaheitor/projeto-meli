@@ -32,7 +32,7 @@ public class Match {
     private  Integer homeTeamScore;
     private  Integer awayTeamScore;
 
-    @Column(nullable = false)
+    @ManyToOne
     @JoinColumn(name = "stadium_id", nullable = false)
     private Stadium stadium;
 
