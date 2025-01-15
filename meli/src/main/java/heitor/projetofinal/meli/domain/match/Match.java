@@ -2,6 +2,7 @@ package heitor.projetofinal.meli.domain.match;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import heitor.projetofinal.meli.domain.club.Club;
+import heitor.projetofinal.meli.domain.stadium.Stadium;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,7 +33,8 @@ public class Match {
     private  Integer awayTeamScore;
 
     @Column(nullable = false)
-    private String stadium;
+    @JoinColumn(name = "stadium_id", nullable = false)
+    private Stadium stadium;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =  "dd/MM/yyyy HH:mm")

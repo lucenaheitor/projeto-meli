@@ -21,13 +21,12 @@ public class MatchController {
     @Autowired
     private MatchService matchService;
 
-    @PostMapping
-    @Transactional
-    public ResponseEntity postMatch(@RequestBody CreateMatchDTO  dto, UriComponentsBuilder uriBuilder) {
-        CreateMatchDTO createMatchDTO=  matchService.createMatch(dto);
-        URI adress =  uriBuilder.path("/matches/{id}").buildAndExpand(createMatchDTO.getId()).toUri();
 
-        return ResponseEntity.created(adress).body(createMatchDTO);
-    }
+//    public ResponseEntity postMatch(@RequestBody CreateMatchDTO  dto, UriComponentsBuilder uriBuilder) {
+//        CreateMatchDTO createMatchDTO=  matchService.createMatch(dto);
+//        URI adress =  uriBuilder.path("/matches/{id}").buildAndExpand(createMatchDTO.getId()).toUri();
+//
+//        return ResponseEntity.created(adress).body(createMatchDTO);
+//    }
 
 }
