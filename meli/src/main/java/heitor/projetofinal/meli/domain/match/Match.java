@@ -34,9 +34,9 @@ public class Match {
 
     @ManyToOne
     @JoinColumn(name = "stadium_id", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Stadium stadium;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =  "dd/MM/yyyy HH:mm")
     private LocalDate matchDate;
 }

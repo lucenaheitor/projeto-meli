@@ -20,6 +20,7 @@ public class Club {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private State state;
 
     private LocalDate date;

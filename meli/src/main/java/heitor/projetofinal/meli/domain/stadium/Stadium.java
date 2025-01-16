@@ -1,9 +1,8 @@
 package heitor.projetofinal.meli.domain.stadium;
 
+import heitor.projetofinal.meli.domain.state.State;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Table(name ="stadium")
@@ -18,4 +17,8 @@ public class Stadium {
     private Long id;
 
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private State state;
 }
