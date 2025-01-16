@@ -32,7 +32,7 @@ public class CreateMatchDTO {
     @NotNull
     private String  stadium;
 
-    @NotNull
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =  "dd-MM-yyyy HH:mm")
     private LocalDate matchDate;
 }

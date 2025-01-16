@@ -36,6 +36,6 @@ public class Match {
     @JoinColumn(name = "stadium_id", nullable = false)
     private Stadium stadium;
 
-    @Column(nullable = false)
+    @Column(name = "matchDate", nullable = false)
     private LocalDate matchDate;
 }
