@@ -89,5 +89,9 @@ public class MatchService {
         return modelMapper.map(match, UpdateMatchDTO.class);
   }
 
+  public void deleteMatch(Long id) {
+        matchesRepository.deleteById(id);
+  }
+
 
 }
