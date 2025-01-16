@@ -1,8 +1,11 @@
 package heitor.projetofinal.meli.service;
 
+import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.match.Match;
 import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
+import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
+import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -15,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+
+import java.lang.annotation.Native;
 
 @Service
 public class MatchService {
@@ -71,7 +76,18 @@ public class MatchService {
                 .map(match -> modelMapper.map(match, ListMatches.class));
   }
 
+  public DetailMatchesDTO detailMatches(Long id) {
+      Match Match = matchesRepository.findById(id)
+              .orElseThrow(() -> new ValidationExcepetion("Match not found"));
+      return modelMapper.map(Match, DetailMatchesDTO.class);
+  }
 
+  public UpdateMatchDTO updateMatch(UpdateMatchDTO dto) {
+        Match match = matchesRepository.getReferenceById(dto.getId());
+        modelMapper.map(dto, match);
+        matchesRepository.save(match);
+        return modelMapper.map(match, UpdateMatchDTO.class);
+  }
 
 
 }

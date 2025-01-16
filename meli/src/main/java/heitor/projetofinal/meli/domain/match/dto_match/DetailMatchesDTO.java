@@ -10,11 +10,13 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListMatches {
+public class DetailMatchesDTO {
 
     private Long id;
     private String homeTeamName;
     private String awayTeamName;
+    private Integer homeTeamScore;
+    private Integer awayTeamScore;
     private String stadiumName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
