@@ -2,13 +2,18 @@ package heitor.projetofinal.meli.service;
 
 import heitor.projetofinal.meli.domain.match.Match;
 import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
+import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
-import heitor.projetofinal.meli.domain.stadium.Stadium;
 import heitor.projetofinal.meli.infra.excepetion.ValidationExcepetion;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,6 +65,13 @@ public class MatchService {
 
         return modelMapper.map(match, CreateMatchDTO.class);
     }
+
+  public  Page<ListMatches> listMatches( @PageableDefault(size = 5, sort = "name") Pageable pageable) {
+        return  matchesRepository.findAll(pageable)
+                .map(match -> modelMapper.map(match, ListMatches.class));
+  }
+
+
 
 
 }
