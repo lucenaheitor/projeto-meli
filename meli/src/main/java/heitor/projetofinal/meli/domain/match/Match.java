@@ -34,7 +34,6 @@ public class Match {
 
     @ManyToOne
     @JoinColumn(name = "stadium_id", nullable = false)
-    @Enumerated(EnumType.STRING)
     private Stadium stadium;
 
     @Column(nullable = false)

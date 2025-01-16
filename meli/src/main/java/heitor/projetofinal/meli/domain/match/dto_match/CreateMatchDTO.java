@@ -18,10 +18,10 @@ public class CreateMatchDTO {
     private Long id;
 
     @NotNull
-    private Club homeTeam;
+    private String homeTeam;
 
     @NotNull
-    private Club awayTeam;
+    private String awayTeam;
 
     @NotNull
     private Integer homeTeamScore;
@@ -30,7 +30,7 @@ public class CreateMatchDTO {
     private Integer awayTeamScore;
 
     @NotNull
-    private Stadium stadium;
+    private String  stadium;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =  "dd-MM-yyyy HH:mm")
