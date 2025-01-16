@@ -33,6 +33,6 @@ public class CreateMatchDTO {
     private String  stadium;
 
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =  "dd-MM-yyyy HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern =  "dd-MM-yyyy")
     private LocalDate matchDate;
 }

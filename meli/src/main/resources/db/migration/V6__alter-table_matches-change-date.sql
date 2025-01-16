@@ -1,0 +1,1 @@
+ALTER TABLE  matches RENAME COLUMN matchDate TO match_date;
