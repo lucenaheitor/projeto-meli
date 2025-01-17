@@ -1,11 +1,14 @@
 package heitor.projetofinal.meli.controler;
 
+import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
 import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
 import heitor.projetofinal.meli.service.ClubService;
+import heitor.projetofinal.meli.service.MatchService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,8 @@ public class ClubController {
 
     @Autowired
     private ClubService clubService;
+    @Autowired
+    private MatchService matchService;
 
 
     @PostMapping
@@ -64,6 +69,12 @@ public class ClubController {
     public ResponseEntity delete(@PathVariable Long id){
         clubService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{clubName}/retrospecto")
+    public ResponseEntity<ClubRestrospectveDTO> getRetrospecto(@PathVariable Club clubName) {
+        ClubRestrospectveDTO retrospecto = matchService.clubRestrospectve(clubName);
+        return ResponseEntity.ok(retrospecto);
     }
 
 }

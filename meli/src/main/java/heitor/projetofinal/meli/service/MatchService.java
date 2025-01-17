@@ -6,6 +6,7 @@ import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
+import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -20,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Native;
+import java.util.List;
 
 @Service
 public class MatchService {
@@ -94,4 +96,38 @@ public class MatchService {
   }
 
 
+  public ClubRestrospectveDTO clubRestrospectve(Club  clubName) {
+
+      List<Match> matches  = matchesRepository.findByHomeTeamOrAwayTeam(clubName, clubName);
+
+      Integer totalWins = 0;
+      Integer totalDraws = 0;
+      Integer totalLosses = 0;
+      Integer totalGoalsScored = 0;
+      Integer totalGoalsConceded = 0;
+
+      for (Match match : matches) {
+           boolean isHomeTeam = match.getHomeTeam().equals(clubName);
+
+          int goalsScored = isHomeTeam ? match.getHomeTeamScore() : match.getAwayTeamScore();
+          int goalsConceded = isHomeTeam ? match.getAwayTeamScore() : match.getHomeTeamScore();
+
+          totalGoalsScored += goalsScored;
+          totalGoalsConceded += goalsConceded;
+
+          if (goalsScored > goalsConceded) {
+              totalWins++;
+          } else if (goalsScored == goalsConceded) {
+              totalDraws++;
+          } else {
+              totalLosses++;
+          }
+      }
+      return new ClubRestrospectveDTO(totalWins, totalDraws, totalLosses, totalGoalsScored, totalGoalsConceded);
+
+  }
+
 }
+
+
+
