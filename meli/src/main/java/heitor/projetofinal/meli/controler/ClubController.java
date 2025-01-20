@@ -78,10 +78,11 @@ public class ClubController {
         ClubRestrospectveDTO retrospecto = matchService.clubRestrospectve(clubName);
         return ResponseEntity.ok(retrospecto);
     }
-    @GetMapping("/{clubName}/retrospecto/adversarios")
-    public ResponseEntity<List<AdversaryRestrospectiveDTO>> getRetrospectoContraAdversarios(@PathVariable Club clubName) {
+    @GetMapping("/retrospecto/adversarios")
+    public ResponseEntity<List<AdversaryRestrospectiveDTO>> getRetrospectoContraAdversarios(
+            @RequestParam Club clubName) {
         List<AdversaryRestrospectiveDTO> retrospecto = matchService.calcularRetrospectoContraAdversarios(clubName);
-        return ResponseEntity.ok(retrospecto); // Retorna 200 OK com os dados
+        return ResponseEntity.ok(retrospecto);
     }
 
 }
