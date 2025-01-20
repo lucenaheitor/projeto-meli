@@ -4,6 +4,7 @@ import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.club.club_dto.DetailClub;
 import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
+import heitor.projetofinal.meli.domain.match.high_search.AdversaryRestrospectiveDTO;
 import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.club.club_dto.CreateClubDTO;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clubs")
@@ -45,7 +47,7 @@ public class ClubController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ListClubDTO>> listClub( @PageableDefault(size = 5, sort = "name") Pageable pageable){
+    public ResponseEntity<Page<ListClubDTO>> listClub( @PageableDefault(size = 10, sort = "name") Pageable pageable){
         Page page = clubService.list(pageable);
         return ResponseEntity.ok(page);
     }
@@ -75,6 +77,11 @@ public class ClubController {
     public ResponseEntity<ClubRestrospectveDTO> getRetrospecto(@PathVariable Club clubName) {
         ClubRestrospectveDTO retrospecto = matchService.clubRestrospectve(clubName);
         return ResponseEntity.ok(retrospecto);
+    }
+    @GetMapping("/{clubName}/retrospecto/adversarios")
+    public ResponseEntity<List<AdversaryRestrospectiveDTO>> getRetrospectoContraAdversarios(@PathVariable Club clubName) {
+        List<AdversaryRestrospectiveDTO> retrospecto = matchService.calcularRetrospectoContraAdversarios(clubName);
+        return ResponseEntity.ok(retrospecto); // Retorna 200 OK com os dados
     }
 
 }

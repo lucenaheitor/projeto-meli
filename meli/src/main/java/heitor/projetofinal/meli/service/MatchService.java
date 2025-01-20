@@ -6,6 +6,7 @@ import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
+import heitor.projetofinal.meli.domain.match.high_search.AdversaryRestrospectiveDTO;
 import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
@@ -21,7 +22,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Native;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MatchService {
@@ -126,6 +130,36 @@ public class MatchService {
       return new ClubRestrospectveDTO(totalWins, totalDraws, totalLosses, totalGoalsScored, totalGoalsConceded);
 
   }
+
+    public List<AdversaryRestrospectiveDTO> calcularRetrospectoContraAdversarios(Club clubName) {
+        List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(clubName, clubName);
+
+        Map<String, AdversaryRestrospectiveDTO> retrospectoPorAdversario = new HashMap<>();
+
+        for (Match match : matches) {
+            boolean isHomeTeam = match.getHomeTeam().equals(clubName);
+
+            Club adversary = isHomeTeam ? match.getAwayTeam() : match.getHomeTeam();
+            int goalsScored = isHomeTeam ? match.getHomeTeamScore() : match.getAwayTeamScore();
+            int goalsConceded = isHomeTeam ? match.getAwayTeamScore() : match.getHomeTeamScore();
+
+            AdversaryRestrospectiveDTO dto = retrospectoPorAdversario.computeIfAbsent(String.valueOf(adversary),
+                    key -> new AdversaryRestrospectiveDTO("", 0, 0, 0, 0, 0));
+
+            dto.setTotalGoalsScored(dto.getTotalGoalsScored() + goalsScored);
+            dto.setTotalGoalsConceded(dto.getTotalGoalsConceded() + goalsConceded);
+
+            if (goalsScored > goalsConceded) {
+                dto.setTotalWins(dto.getTotalWins() + 1);
+            } else if (goalsScored == goalsConceded) {
+                dto.setTotalDraws(dto.getTotalDraws() + 1);
+            } else {
+                dto.setTotalLosses(dto.getTotalLosses() + 1);
+            }
+        }
+
+        return new ArrayList<>(retrospectoPorAdversario.values());
+    }
 
 }
 
