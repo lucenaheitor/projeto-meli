@@ -6,10 +6,7 @@ import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
-import heitor.projetofinal.meli.domain.match.high_search.AdversaryRestrospectiveDTO;
-import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
-import heitor.projetofinal.meli.domain.match.high_search.DirectConfrontation;
-import heitor.projetofinal.meli.domain.match.high_search.RetrospectDTO;
+import heitor.projetofinal.meli.domain.match.high_search.*;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -193,5 +190,8 @@ public class MatchService {
 
         return new DirectConfrontation(matches, retrospect1, retrospect2);
     }
+
+
+
 
 }
