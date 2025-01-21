@@ -132,11 +132,9 @@ public class MatchService {
   }
 
     public List<AdversaryRestrospectiveDTO> calcularRetrospectoContraAdversarios(String clubName) {
-        // Busque o objeto Club pelo nome
         Club club = clubRepository.findByName(clubName)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found: " + clubName));
 
-        // Continue com a lógica usando o objeto Club
         List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
 
         Map<String, AdversaryRestrospectiveDTO> retrospectoPorAdversario = new HashMap<>();
