@@ -8,6 +8,8 @@ import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
 import heitor.projetofinal.meli.domain.match.high_search.AdversaryRestrospectiveDTO;
 import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
+import heitor.projetofinal.meli.domain.match.high_search.DirectConfrontation;
+import heitor.projetofinal.meli.domain.match.high_search.RetrospectDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -15,17 +17,11 @@ import heitor.projetofinal.meli.infra.excepetion.ValidationExcepetion;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
-import java.lang.annotation.Native;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MatchService {
@@ -100,36 +96,36 @@ public class MatchService {
   }
 
 
-  public ClubRestrospectveDTO clubRestrospectve(Club  clubName) {
+    public ClubRestrospectveDTO clubRestrospectve(Club club) {
+        List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
 
-      List<Match> matches  = matchesRepository.findByHomeTeamOrAwayTeam(clubName, clubName);
+        int totalWins = 0;
+        int totalDraws = 0;
+        int totalLosses = 0;
+        int totalGoalsScored = 0;
+        int totalGoalsConceded = 0;
 
-      Integer totalWins = 0;
-      Integer totalDraws = 0;
-      Integer totalLosses = 0;
-      Integer totalGoalsScored = 0;
-      Integer totalGoalsConceded = 0;
+        for (Match match : matches) {
+            boolean isHomeTeam = match.getHomeTeam().equals(club);
 
-      for (Match match : matches) {
-           boolean isHomeTeam = match.getHomeTeam().equals(clubName);
+            int goalsScored = isHomeTeam ? match.getHomeTeamScore() : match.getAwayTeamScore();
+            int goalsConceded = isHomeTeam ? match.getAwayTeamScore() : match.getHomeTeamScore();
 
-          int goalsScored = isHomeTeam ? match.getHomeTeamScore() : match.getAwayTeamScore();
-          int goalsConceded = isHomeTeam ? match.getAwayTeamScore() : match.getHomeTeamScore();
+            totalGoalsScored += goalsScored;
+            totalGoalsConceded += goalsConceded;
 
-          totalGoalsScored += goalsScored;
-          totalGoalsConceded += goalsConceded;
+            if (goalsScored > goalsConceded) {
+                totalWins++;
+            } else if (goalsScored == goalsConceded) {
+                totalDraws++;
+            } else {
+                totalLosses++;
+            }
+        }
 
-          if (goalsScored > goalsConceded) {
-              totalWins++;
-          } else if (goalsScored == goalsConceded) {
-              totalDraws++;
-          } else {
-              totalLosses++;
-          }
-      }
-      return new ClubRestrospectveDTO(totalWins, totalDraws, totalLosses, totalGoalsScored, totalGoalsConceded);
+        return new ClubRestrospectveDTO(club.getName(), totalWins, totalDraws, totalLosses, totalGoalsScored, totalGoalsConceded);
+    }
 
-  }
 
     public List<AdversaryRestrospectiveDTO> calcularRetrospectoContraAdversarios(String clubName) {
         Club club = clubRepository.findByName(clubName)
@@ -164,8 +160,42 @@ public class MatchService {
         return new ArrayList<>(retrospectoPorAdversario.values());
     }
 
+    public DirectConfrontation getDirectConfrontations(Club club1, Club club2) {
+        // Busca todas as partidas entre os dois clubes
+        List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club1, club2);
+
+        // Inicializa os retrospectos com valores zerados
+        RetrospectDTO retrospect1 = new RetrospectDTO(club1.getName(), 0, 0, 0, 0, 0);
+        RetrospectDTO retrospect2 = new RetrospectDTO(club2.getName(), 0, 0, 0, 0, 0);
+
+        // Calcula os dados para cada partida
+        for (Match match : matches) {
+            boolean isClub1Home = match.getHomeTeam().equals(club1);
+
+            int club1Goals = isClub1Home ? match.getHomeTeamScore() : match.getAwayTeamScore();
+            int club2Goals = isClub1Home ? match.getAwayTeamScore() : match.getHomeTeamScore();
+
+            // Atualiza os gols
+            retrospect1.setTotalGoalsScored(retrospect1.getTotalGoalsScored() + club1Goals);
+            retrospect1.setTotalGoalsConceded(retrospect1.getTotalGoalsConceded() + club2Goals);
+
+            retrospect2.setTotalGoalsScored(retrospect2.getTotalGoalsScored() + club2Goals);
+            retrospect2.setTotalGoalsConceded(retrospect2.getTotalGoalsConceded() + club1Goals);
+
+            // Determina o vencedor e atualiza os resultados
+            if (club1Goals > club2Goals) {
+                retrospect1.setTotalWins(retrospect1.getTotalWins() + 1);
+                retrospect2.setTotalLosses(retrospect2.getTotalLosses() + 1);
+            } else if (club1Goals == club2Goals) {
+                retrospect1.setTotalDraws(retrospect1.getTotalDraws() + 1);
+                retrospect2.setTotalDraws(retrospect2.getTotalDraws() + 1);
+            } else {
+                retrospect1.setTotalLosses(retrospect1.getTotalLosses() + 1);
+                retrospect2.setTotalWins(retrospect2.getTotalWins() + 1);
+            }
+        }
+
+        return new DirectConfrontation(matches, retrospect1, retrospect2);
+    }
 
 }
-
-
-

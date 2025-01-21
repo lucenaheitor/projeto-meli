@@ -1,8 +1,11 @@
 package heitor.projetofinal.meli.domain.match.high_search;
 
+import heitor.projetofinal.meli.domain.match.Match;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +18,5 @@ public class AdversaryRestrospectiveDTO {
     private Integer totalLosses;
     private Integer totalGoalsScored;
     private Integer totalGoalsConceded;
+
 }

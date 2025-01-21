@@ -1,9 +1,11 @@
 package heitor.projetofinal.meli.controler;
 
+import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
+import heitor.projetofinal.meli.domain.match.high_search.DirectConfrontation;
 import heitor.projetofinal.meli.service.MatchService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -57,5 +59,17 @@ public class MatchController {
         matchService.deleteMatch(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/direct-confrontation")
+    public ResponseEntity<DirectConfrontation> getDirectConfrontations(
+            @RequestParam("club1") Club club1,
+            @RequestParam("club2") Club club2) {
+
+        DirectConfrontation confrontationDTO = matchService.getDirectConfrontations(club1, club2);
+        return ResponseEntity.ok(confrontationDTO);
+    }
+
+
+
 
 }
