@@ -131,20 +131,25 @@ public class MatchService {
 
   }
 
-    public List<AdversaryRestrospectiveDTO> calcularRetrospectoContraAdversarios(Club clubName) {
-        List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(clubName, clubName);
+    public List<AdversaryRestrospectiveDTO> calcularRetrospectoContraAdversarios(String clubName) {
+        // Busque o objeto Club pelo nome
+        Club club = clubRepository.findByName(clubName)
+                .orElseThrow(() -> new IllegalArgumentException("Club not found: " + clubName));
+
+        // Continue com a lógica usando o objeto Club
+        List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
 
         Map<String, AdversaryRestrospectiveDTO> retrospectoPorAdversario = new HashMap<>();
 
         for (Match match : matches) {
-            boolean isHomeTeam = match.getHomeTeam().equals(clubName);
+            boolean isHomeTeam = match.getHomeTeam().equals(club);
 
             Club adversary = isHomeTeam ? match.getAwayTeam() : match.getHomeTeam();
             int goalsScored = isHomeTeam ? match.getHomeTeamScore() : match.getAwayTeamScore();
             int goalsConceded = isHomeTeam ? match.getAwayTeamScore() : match.getHomeTeamScore();
 
-            AdversaryRestrospectiveDTO dto = retrospectoPorAdversario.computeIfAbsent(String.valueOf(adversary),
-                    key -> new AdversaryRestrospectiveDTO("", 0, 0, 0, 0, 0));
+            AdversaryRestrospectiveDTO dto = retrospectoPorAdversario.computeIfAbsent(adversary.getName(),
+                    key -> new AdversaryRestrospectiveDTO(adversary.getName(), 0, 0, 0, 0, 0));
 
             dto.setTotalGoalsScored(dto.getTotalGoalsScored() + goalsScored);
             dto.setTotalGoalsConceded(dto.getTotalGoalsConceded() + goalsConceded);
@@ -160,6 +165,7 @@ public class MatchService {
 
         return new ArrayList<>(retrospectoPorAdversario.values());
     }
+
 
 }
 

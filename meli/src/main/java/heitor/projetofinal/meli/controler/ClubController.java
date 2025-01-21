@@ -80,9 +80,10 @@ public class ClubController {
     }
     @GetMapping("/retrospecto/adversarios")
     public ResponseEntity<List<AdversaryRestrospectiveDTO>> getRetrospectoContraAdversarios(
-            @RequestParam Club clubName) {
+            @RequestParam String clubName) {
         List<AdversaryRestrospectiveDTO> retrospecto = matchService.calcularRetrospectoContraAdversarios(clubName);
         return ResponseEntity.ok(retrospecto);
     }
+
 
 }
