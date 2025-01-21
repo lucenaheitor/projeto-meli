@@ -6,14 +6,17 @@ import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
 import heitor.projetofinal.meli.domain.match.high_search.DirectConfrontation;
+import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.service.MatchService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -24,6 +27,9 @@ public class MatchController {
 
     @Autowired
     private MatchService matchService;
+
+    @Autowired
+     private ClubRepository clubRepository;
 
     @PostMapping
     @Transactional
@@ -62,12 +68,18 @@ public class MatchController {
 
     @GetMapping("/direct-confrontation")
     public ResponseEntity<DirectConfrontation> getDirectConfrontations(
-            @RequestParam("club1") Club club1,
-            @RequestParam("club2") Club club2) {
+            @RequestParam("club1Id") Long club1Id,
+            @RequestParam("club2Id") Long club2Id) {
+
+        Club club1 = clubRepository.findById(club1Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Club 1 not found"));
+        Club club2 = clubRepository.findById(club2Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Club 2 not found"));
 
         DirectConfrontation confrontationDTO = matchService.getDirectConfrontations(club1, club2);
         return ResponseEntity.ok(confrontationDTO);
     }
+
 
 
 

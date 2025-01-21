@@ -161,21 +161,17 @@ public class MatchService {
     }
 
     public DirectConfrontation getDirectConfrontations(Club club1, Club club2) {
-        // Busca todas as partidas entre os dois clubes
         List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club1, club2);
 
-        // Inicializa os retrospectos com valores zerados
         RetrospectDTO retrospect1 = new RetrospectDTO(club1.getName(), 0, 0, 0, 0, 0);
         RetrospectDTO retrospect2 = new RetrospectDTO(club2.getName(), 0, 0, 0, 0, 0);
 
-        // Calcula os dados para cada partida
         for (Match match : matches) {
             boolean isClub1Home = match.getHomeTeam().equals(club1);
 
             int club1Goals = isClub1Home ? match.getHomeTeamScore() : match.getAwayTeamScore();
             int club2Goals = isClub1Home ? match.getAwayTeamScore() : match.getHomeTeamScore();
 
-            // Atualiza os gols
             retrospect1.setTotalGoalsScored(retrospect1.getTotalGoalsScored() + club1Goals);
             retrospect1.setTotalGoalsConceded(retrospect1.getTotalGoalsConceded() + club2Goals);
 
