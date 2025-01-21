@@ -20,7 +20,6 @@ public class CreateClubDTO {
 
     @NotNull
     @PastOrPresent
-    @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     LocalDate date;
 
