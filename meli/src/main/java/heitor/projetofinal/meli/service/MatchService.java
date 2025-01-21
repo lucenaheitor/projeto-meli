@@ -191,7 +191,78 @@ public class MatchService {
         return new DirectConfrontation(matches, retrospect1, retrospect2);
     }
 
+    public List<RankingDTO> getRanking(String criteria) {
+        // Obter todos os clubes
+        List<Club> clubs = clubRepository.findAll();
 
+        // Inicializar a lista de ranking
+        List<RankingDTO> ranking = new ArrayList<>();
 
+        // Preencher os dados de cada clube
+        for (Club club : clubs) {
+            // Buscar todas as partidas do clube
+            List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
+
+            if (matches.isEmpty()) {
+                continue; // Excluir clubes sem jogos
+            }
+
+            int totalMatches = matches.size();
+            int totalWins = 0;
+            int totalGoals = 0;
+            int totalPoints = 0;
+
+            for (Match match : matches) {
+                boolean isHome = match.getHomeTeam().equals(club);
+
+                // Gols do clube
+                int goalsScored = isHome ? match.getHomeTeamScore() : match.getAwayTeamScore();
+                int goalsConceded = isHome ? match.getAwayTeamScore() : match.getHomeTeamScore();
+
+                totalGoals += goalsScored;
+
+                // Determinar vitória, empate ou derrota
+                if (goalsScored > goalsConceded) {
+                    totalWins++;
+                    totalPoints += 3; // Vitória
+                } else if (goalsScored == goalsConceded) {
+                    totalPoints += 1; // Empate
+                }
+            }
+
+            // Adicionar ao ranking se atender aos critérios
+            if ((criteria.equalsIgnoreCase("jogos") && totalMatches > 0) ||
+                    (criteria.equalsIgnoreCase("vitorias") && totalWins > 0) ||
+                    (criteria.equalsIgnoreCase("gols") && totalGoals > 0) ||
+                    (criteria.equalsIgnoreCase("pontos") && totalPoints > 0)) {
+
+                ranking.add(new RankingDTO(
+                        club.getName(),
+                        totalMatches,
+                        totalWins,
+                        totalGoals,
+                        totalPoints
+                ));
+            }
+        }
+
+        // Ordenar a lista com base no critério
+        ranking.sort((a, b) -> {
+            switch (criteria.toLowerCase()) {
+                case "jogos":
+                    return Integer.compare(b.getTotalMatches(), a.getTotalMatches());
+                case "vitorias":
+                    return Integer.compare(b.getTotalWins(), a.getTotalWins());
+                case "gols":
+                    return Integer.compare(b.getTotalGoals(), a.getTotalGoals());
+                case "pontos":
+                    return Integer.compare(b.getTotalPoints(), a.getTotalPoints());
+                default:
+                    throw new IllegalArgumentException("Critério inválido: " + criteria);
+            }
+        });
+
+        return ranking;
+    }
 
 }

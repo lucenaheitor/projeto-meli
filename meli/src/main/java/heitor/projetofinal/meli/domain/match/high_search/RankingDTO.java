@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RankingDTO {
 
-    private Integer totalGames;
-    private Integer totalWin;
-    private Integer totalScore;
-    private Integer totalPoints;
+    private String clubName;
+    private int totalMatches;
+    private int totalWins;
+    private int totalGoals;
+    private int totalPoints;;
 
 }
