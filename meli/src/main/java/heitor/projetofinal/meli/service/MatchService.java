@@ -19,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
@@ -191,7 +192,7 @@ public class MatchService {
         return new DirectConfrontation(matches, retrospect1, retrospect2);
     }
 
-    public List<RankingDTO> getRanking(String criteria) {
+    public List<RankingDTO> getRanking(String dto) {
         List<Club> clubs = clubRepository.findAll();
 
         List<RankingDTO> ranking = new ArrayList<>();
@@ -225,10 +226,10 @@ public class MatchService {
                 }
             }
 
-            if ((criteria.equalsIgnoreCase("jogos") && totalMatches > 0) ||
-                    (criteria.equalsIgnoreCase("vitorias") && totalWins > 0) ||
-                    (criteria.equalsIgnoreCase("gols") && totalGoals > 0) ||
-                    (criteria.equalsIgnoreCase("pontos") && totalPoints > 0)) {
+            if ((dto.equalsIgnoreCase("jogos") && totalMatches > 0) ||
+                    (dto.equalsIgnoreCase("vitorias") && totalWins > 0) ||
+                    (dto.equalsIgnoreCase("gols") && totalGoals > 0) ||
+                    (dto.equalsIgnoreCase("pontos") && totalPoints > 0)) {
 
                 ranking.add(new RankingDTO(
                         club.getName(),
@@ -241,7 +242,7 @@ public class MatchService {
         }
 
         ranking.sort((a, b) -> {
-            switch (criteria.toLowerCase()) {
+            switch (dto.toLowerCase()) {
                 case "jogos":
                     return Integer.compare(b.getTotalMatches(), a.getTotalMatches());
                 case "vitorias":
@@ -251,11 +252,31 @@ public class MatchService {
                 case "pontos":
                     return Integer.compare(b.getTotalPoints(), a.getTotalPoints());
                 default:
-                    throw new IllegalArgumentException("Critério inválido: " + criteria);
+                    throw new IllegalArgumentException("Critério inválido: " + dto);
             }
         });
 
         return ranking;
     }
+
+    public List<ThrashingDTO> getTrashing(boolean goleada) {
+        List<Match> allMatches = matchesRepository.findAll();
+
+        if (goleada) {
+            allMatches = allMatches.stream()
+                    .filter(match -> Math.abs(match.getHomeTeamScore() - match.getAwayTeamScore()) >= 3)
+                    .collect(Collectors.toList());
+        }
+
+        return allMatches.stream()
+                .map(match -> new ThrashingDTO(
+                        match.getHomeTeam().getName(),
+                        match.getAwayTeam().getName(),
+                        match.getHomeTeamScore(),
+                        match.getAwayTeamScore()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
 }

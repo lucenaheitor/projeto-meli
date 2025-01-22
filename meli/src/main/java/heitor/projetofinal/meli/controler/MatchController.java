@@ -6,6 +6,7 @@ import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
 import heitor.projetofinal.meli.domain.match.high_search.DirectConfrontation;
+import heitor.projetofinal.meli.domain.match.high_search.ThrashingDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.service.MatchService;
 import jakarta.transaction.Transactional;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/matches")
@@ -79,6 +81,14 @@ public class MatchController {
         DirectConfrontation confrontationDTO = matchService.getDirectConfrontations(club1, club2);
         return ResponseEntity.ok(confrontationDTO);
     }
+
+    @GetMapping("/thrashing")
+    public ResponseEntity<List<ThrashingDTO>> getMatches(
+            @RequestParam(value = "goleada", required = false, defaultValue = "false") boolean goleada) {
+        List<ThrashingDTO> matches = matchService.getTrashing(goleada);
+        return ResponseEntity.ok(matches);
+    }
+
 
 
 
