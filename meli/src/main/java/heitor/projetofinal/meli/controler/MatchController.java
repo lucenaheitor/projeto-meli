@@ -6,6 +6,7 @@ import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
 import heitor.projetofinal.meli.domain.match.high_search.DirectConfrontation;
+import heitor.projetofinal.meli.domain.match.high_search.MatchDTO;
 import heitor.projetofinal.meli.domain.match.high_search.ThrashingDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.service.MatchService;
@@ -86,6 +87,14 @@ public class MatchController {
     public ResponseEntity<List<ThrashingDTO>> getMatches(
             @RequestParam(value = "goleada", required = false, defaultValue = "false") boolean goleada) {
         List<ThrashingDTO> matches = matchService.getTrashing(goleada);
+        return ResponseEntity.ok(matches);
+    }
+    @GetMapping("/matches")
+    public ResponseEntity<List<MatchDTO>> getMatchesByClub(
+            @RequestParam(value = "club", required = true) Long clubId,
+            @RequestParam(value = "mandante", required = false, defaultValue = "false") boolean mandante,
+            @RequestParam(value = "visitante", required = false, defaultValue = "false") boolean visitante) {
+        List<MatchDTO> matches = matchService.getMatchesByClub(clubId, mandante, visitante);
         return ResponseEntity.ok(matches);
     }
 

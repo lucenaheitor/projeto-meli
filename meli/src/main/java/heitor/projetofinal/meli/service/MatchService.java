@@ -11,6 +11,7 @@ import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
 import heitor.projetofinal.meli.infra.excepetion.ValidationExcepetion;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -277,6 +278,34 @@ public class MatchService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public List<MatchDTO> getMatchesByClub(Long clubId, boolean mandante, boolean visitante) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("Clube não encontrado"));
+
+        List<Match> allMatches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
+
+        if (mandante) {
+            allMatches = allMatches.stream()
+                    .filter(match -> match.getHomeTeam().equals(club)) // Jogou como mandante
+                    .collect(Collectors.toList());
+        }
+        if (visitante) {
+            allMatches = allMatches.stream()
+                    .filter(match -> match.getAwayTeam().equals(club)) // Jogou como visitante
+                    .collect(Collectors.toList());
+        }
+
+        return allMatches.stream()
+                .map(match -> new MatchDTO(
+                        match.getHomeTeam().getName(),
+                        match.getAwayTeam().getName(),
+                        match.getHomeTeamScore(),
+                        match.getAwayTeamScore()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
 
 }
