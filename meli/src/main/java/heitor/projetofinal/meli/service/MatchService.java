@@ -192,19 +192,15 @@ public class MatchService {
     }
 
     public List<RankingDTO> getRanking(String criteria) {
-        // Obter todos os clubes
         List<Club> clubs = clubRepository.findAll();
 
-        // Inicializar a lista de ranking
         List<RankingDTO> ranking = new ArrayList<>();
 
-        // Preencher os dados de cada clube
         for (Club club : clubs) {
-            // Buscar todas as partidas do clube
             List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
 
             if (matches.isEmpty()) {
-                continue; // Excluir clubes sem jogos
+                continue;
             }
 
             int totalMatches = matches.size();
@@ -215,22 +211,20 @@ public class MatchService {
             for (Match match : matches) {
                 boolean isHome = match.getHomeTeam().equals(club);
 
-                // Gols do clube
+
                 int goalsScored = isHome ? match.getHomeTeamScore() : match.getAwayTeamScore();
                 int goalsConceded = isHome ? match.getAwayTeamScore() : match.getHomeTeamScore();
 
                 totalGoals += goalsScored;
 
-                // Determinar vitória, empate ou derrota
                 if (goalsScored > goalsConceded) {
                     totalWins++;
-                    totalPoints += 3; // Vitória
+                    totalPoints += 3;
                 } else if (goalsScored == goalsConceded) {
-                    totalPoints += 1; // Empate
+                    totalPoints += 1;
                 }
             }
 
-            // Adicionar ao ranking se atender aos critérios
             if ((criteria.equalsIgnoreCase("jogos") && totalMatches > 0) ||
                     (criteria.equalsIgnoreCase("vitorias") && totalWins > 0) ||
                     (criteria.equalsIgnoreCase("gols") && totalGoals > 0) ||
@@ -246,7 +240,6 @@ public class MatchService {
             }
         }
 
-        // Ordenar a lista com base no critério
         ranking.sort((a, b) -> {
             switch (criteria.toLowerCase()) {
                 case "jogos":

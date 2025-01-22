@@ -19,8 +19,8 @@ public class Ranking {
     private MatchService matchService;
 
     @GetMapping
-    public ResponseEntity<List<RankingDTO>> getRanking(@RequestParam("criteria") String criteria) {
-        List<RankingDTO> ranking = matchService.getRanking(criteria);
+    public ResponseEntity<List<RankingDTO>> getRanking(@RequestParam("criterio") String criterio) {
+        List<RankingDTO> ranking = matchService.getRanking(criterio);
         return ResponseEntity.ok(ranking);
     }
 

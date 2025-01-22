@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class  restrospectiveGlobalErrors {
+public class GlobalErrors {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity entityHandler404() {
