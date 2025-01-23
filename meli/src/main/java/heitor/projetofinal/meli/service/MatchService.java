@@ -1,5 +1,6 @@
 package heitor.projetofinal.meli.service;
 
+import heitor.projetofinal.meli.controler.exception_match.ValidationMatch;
 import heitor.projetofinal.meli.domain.club.Club;
 import heitor.projetofinal.meli.domain.match.Match;
 import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
@@ -37,6 +38,9 @@ public class MatchService {
     @Autowired
     private MatchesRepository matchesRepository;
 
+    @Autowired
+    private List<ValidationMatch> validationMatches;
+
     public CreateMatchDTO createMatch(CreateMatchDTO dto) {
         var homeClub = clubRepository.findByName(dto.getHomeTeam())
                 .orElseThrow(() -> new ValidationExcepetion("Home club not found: " + dto.getHomeTeam()));
@@ -49,6 +53,8 @@ public class MatchService {
 
         var stadium = stadiumRepository.findByName(dto.getStadium())
                 .orElseThrow(() -> new ValidationExcepetion("Stadium not found: " + dto.getStadium()));
+
+        validationMatches.forEach( v  ->  v.validate(dto));
 
         Match match = new Match();
 
@@ -304,7 +310,5 @@ public class MatchService {
                 ))
                 .collect(Collectors.toList());
     }
-
-
 
 }

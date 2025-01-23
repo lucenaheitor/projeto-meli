@@ -38,7 +38,7 @@ public class StadiumController {
     }
 
     @GetMapping("/{id}")
-    public  ResponseEntity<DetailStadiumDTO> datail(@PathVariable Long id) {
+    public  ResponseEntity datail(@PathVariable Long id) {
          DetailStadiumDTO detailDTO = stadiumService.detailStadium(id);
          return ResponseEntity.ok(detailDTO);
     }
