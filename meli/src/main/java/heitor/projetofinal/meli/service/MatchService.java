@@ -177,7 +177,6 @@ public class MatchService {
             retrospect2.setTotalGoalsScored(retrospect2.getTotalGoalsScored() + club2Goals);
             retrospect2.setTotalGoalsConceded(retrospect2.getTotalGoalsConceded() + club1Goals);
 
-            // Determina o vencedor e atualiza os resultados
             if (club1Goals > club2Goals) {
                 retrospect1.setTotalWins(retrospect1.getTotalWins() + 1);
                 retrospect2.setTotalLosses(retrospect2.getTotalLosses() + 1);
@@ -287,12 +286,12 @@ public class MatchService {
 
         if (mandante) {
             allMatches = allMatches.stream()
-                    .filter(match -> match.getHomeTeam().equals(club)) // Jogou como mandante
+                    .filter(match -> match.getHomeTeam().equals(club))
                     .collect(Collectors.toList());
         }
         if (visitante) {
             allMatches = allMatches.stream()
-                    .filter(match -> match.getAwayTeam().equals(club)) // Jogou como visitante
+                    .filter(match -> match.getAwayTeam().equals(club))
                     .collect(Collectors.toList());
         }
 

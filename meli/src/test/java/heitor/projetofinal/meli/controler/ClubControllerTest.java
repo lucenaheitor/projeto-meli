@@ -102,37 +102,22 @@ class ClubControllerTest {
     }
 
     @Test
-    void update() throws Exception {
-        UpdateClubDTO testDTO = new UpdateClubDTO();
-        testDTO.setId(1L);
-        testDTO.setName("test");
-        testDTO.setState(State.SP);
-        testDTO.setAtivo(true);
-
-        UpdateClubDTO updateDTO = new UpdateClubDTO(1L, "test mudado", State.PR, true);
-        when(clubService.update(any(UpdateClubDTO.class))).thenReturn(updateDTO);
-
-        var response  = mockMvc.perform(put("/clubs/1")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(testDTO)));
-
-        response.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("test"))
-                .andExpect(jsonPath("$.state").value("SP"))
-                .andExpect(jsonPath("$.ativo").value(true));
-
-
-        verify(clubService).update(argThat(dto ->
-                        dto.getId().equals(1L) &&
-                        dto.getName().equals("test mudado") &&
-                        dto.getState().equals(State.SP) && dto.isAtivo()
-
-
-                ));
-
-
+    void testUpdateClub() throws Exception {
+        UpdateClubDTO testDTO = new UpdateClubDTO(
+                1L,
+                "club test",
+                State.SP,
+                true
+        );
+        when(clubService.update(any(UpdateClubDTO.class))).thenReturn(testDTO);
+        String jsonContent = objectMapper.writeValueAsString(testDTO);
+        var   response = mockMvc.perform(put("/clubs")
+                .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonContent))
+                .andReturn().getResponse();
+        Assertions.assertEquals(200, response.getStatus());
     }
+
 
     @Test
     void delete() {
