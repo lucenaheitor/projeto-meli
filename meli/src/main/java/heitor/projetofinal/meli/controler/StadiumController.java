@@ -26,7 +26,7 @@ public class StadiumController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CreateStadiumDTO> registe (@RequestBody  CreateStadiumDTO dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CreateStadiumDTO> register (@RequestBody  CreateStadiumDTO dto, UriComponentsBuilder uriBuilder) {
         CreateStadiumDTO createStadiumDTO =  stadiumService.createStadium(dto);
         URI adress =  uriBuilder.path("/stadiums/{id}").buildAndExpand(createStadiumDTO.getName()).toUri();
         return ResponseEntity.created(adress).body(createStadiumDTO);
