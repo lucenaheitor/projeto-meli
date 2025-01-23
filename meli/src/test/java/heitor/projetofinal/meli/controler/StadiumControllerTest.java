@@ -1,11 +1,11 @@
 package heitor.projetofinal.meli.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import heitor.projetofinal.meli.domain.club.club_dto.ListClubDTO;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
 import heitor.projetofinal.meli.domain.stadium.stadium_dto.CreateStadiumDTO;
 import heitor.projetofinal.meli.domain.stadium.stadium_dto.DetailStadiumDTO;
 import heitor.projetofinal.meli.domain.stadium.stadium_dto.ListStadiumDTO;
+import heitor.projetofinal.meli.domain.stadium.stadium_dto.UpdateStadiumDTO;
 import heitor.projetofinal.meli.domain.state.State;
 import heitor.projetofinal.meli.service.StadiumService;
 import org.junit.jupiter.api.Assertions;
@@ -20,14 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -89,6 +86,17 @@ class StadiumControllerTest {
     }
 
     @Test
-    void upadte() {
+    void upadte() throws Exception {
+        UpdateStadiumDTO dto = new UpdateStadiumDTO();
+        dto.setId(1L);
+        dto.setName("test");
+
+        when(stadiumService.updateStadium(any())).thenReturn(dto);
+        String jsonContent = objectMapper.writeValueAsString(dto);
+        var response = mockMvc.perform(put("/stadiums")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonContent))
+                .andReturn().getResponse();
+        Assertions.assertEquals(200, response.getStatus());
     }
 }
