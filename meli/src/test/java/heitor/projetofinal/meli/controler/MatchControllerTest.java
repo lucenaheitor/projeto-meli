@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -116,7 +117,13 @@ class  MatchControllerTest {
         Assertions.assertEquals(200, response.getStatus());
     }
 
-@Test
-void delete() {
-}
+    @Test
+    void delete() throws Exception {
+        var response = mockMvc.perform(MockMvcRequestBuilders
+                .delete("/matches/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        Assertions.assertEquals(204, response.getStatus());
+
+    }
 }
