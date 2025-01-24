@@ -165,8 +165,11 @@ public class MatchService {
         return new ArrayList<>(retrospectoPorAdversario.values());
     }
 
+
     public DirectConfrontation getDirectConfrontations(Club club1, Club club2) {
-        List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club1, club2);
+        List<Match> matches = matchesRepository.findByHomeTeamAndAwayTeamOrAwayTeamAndHomeTeam(
+                club1, club2, club2, club1
+        );
 
         RetrospectDTO retrospect1 = new RetrospectDTO(club1.getName(), 0, 0, 0, 0, 0);
         RetrospectDTO retrospect2 = new RetrospectDTO(club2.getName(), 0, 0, 0, 0, 0);
@@ -197,6 +200,7 @@ public class MatchService {
 
         return new DirectConfrontation(matches, retrospect1, retrospect2);
     }
+
 
     public List<RankingDTO> getRanking(String dto) {
         List<Club> clubs = clubRepository.findAll();
@@ -270,8 +274,11 @@ public class MatchService {
 
         if (goleada) {
             allMatches = allMatches.stream()
-                    .filter(match -> Math.abs(match.getHomeTeamScore() - match.getAwayTeamScore()) >= 3)
-                    .collect(Collectors.toList());
+                    .filter(match -> Math.abs(match.getHomeTeamScore() - match.getAwayTeamScore()) >= 3).toList();
+        }
+
+        if(allMatches.isEmpty()) {
+            return Collections.emptyList();
         }
 
         return allMatches.stream()

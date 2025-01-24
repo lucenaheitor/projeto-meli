@@ -25,4 +25,7 @@ public interface MatchesRepository  extends JpaRepository<Match, Long> {
     boolean existsByMatchDate(@Param("matchDate") LocalDate matchDate);
 
 
+    List<Match> findByHomeTeamAndAwayTeamOrAwayTeamAndHomeTeam(
+            Club homeTeam1, Club awayTeam1, Club homeTeam2, Club awayTeam2
+    );
 }

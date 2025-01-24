@@ -89,7 +89,7 @@ public class MatchController {
         List<ThrashingDTO> matches = matchService.getTrashing(goleada);
         return ResponseEntity.ok(matches);
     }
-    @GetMapping("/matches")
+    @GetMapping("/by-team")
     public ResponseEntity<List<MatchDTO>> getMatchesByClub(
             @RequestParam(value = "club", required = true) Long clubId,
             @RequestParam(value = "mandante", required = false, defaultValue = "false") boolean mandante,
