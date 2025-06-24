@@ -33,9 +33,7 @@ public class ClubService {
 
     public CreateClubDTO register(CreateClubDTO dto){
         Club club = modelMapper.map(dto, Club.class);
-
         validationClubs.forEach( v  ->  v.validate(dto));
-
         club = clubRepository.save(club);
         return  modelMapper.map(club, CreateClubDTO.class);
     }
