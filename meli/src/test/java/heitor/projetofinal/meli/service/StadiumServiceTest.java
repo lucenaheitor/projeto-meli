@@ -1,6 +1,7 @@
 package heitor.projetofinal.meli.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
 import heitor.projetofinal.meli.domain.stadium.Stadium;
 import heitor.projetofinal.meli.domain.stadium.stadium_dto.CreateStadiumDTO;
@@ -49,7 +50,7 @@ public class StadiumServiceTest {
         createStadiumDTO = new CreateStadiumDTO("Test", State.GO);
         stadium = new Stadium(1L, "Test",State.SP);
         detailStadiumDTO = new DetailStadiumDTO(1L, "Test", State.SP);
-        updateStadiumDTO = new UpdateStadiumDTO();
+        updateStadiumDTO = new UpdateStadiumDTO(1L, "test1");
     }
 
     @Test
@@ -91,6 +92,17 @@ public class StadiumServiceTest {
 
     @Test
     void updateStadium() {
+        when(stadiumRepository.getReferenceById(anyLong())).thenReturn(stadium);
+        when(stadiumRepository.save(stadium)).thenReturn(stadium);
+        when(modelMapper.map(stadium, UpdateStadiumDTO.class)).thenReturn(updateStadiumDTO);
+
+
+        UpdateStadiumDTO response = stadiumService.updateStadium(updateStadiumDTO);
+
+        assertEquals(response, updateStadiumDTO);
+        verify(modelMapper).map(stadium, UpdateStadiumDTO.class);
+        verify(stadiumRepository).save(stadium);
+        verify(stadiumRepository).getReferenceById(anyLong());
 
     }
 }
