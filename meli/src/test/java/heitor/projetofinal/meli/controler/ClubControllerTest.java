@@ -9,21 +9,27 @@ import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.state.State;
 import heitor.projetofinal.meli.service.ClubService;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,34 +50,37 @@ class ClubControllerTest {
     @Autowired
     private ClubRepository clubRepository;
 
+    private CreateClubDTO createClubDTO;
+
+    @Mock
+    private  ClubController clubController;
+
+    @BeforeEach
+    void setUp() {
+        createClubDTO = new CreateClubDTO("Santos", State.SP, LocalDate.of(1954, 03, 12));
+    }
+
     @Test
     void register() throws Exception {
-        CreateClubDTO testDTO = new CreateClubDTO();
-         testDTO.setName("test");
-         testDTO.setState(State.SP);
-         testDTO.setDate(LocalDate.of(1979, 1, 24));
+        when(clubService.register(createClubDTO)).thenReturn(createClubDTO);
 
-         when(clubService.register(any(CreateClubDTO.class))).thenReturn(testDTO);
+        ResponseEntity<CreateClubDTO> response = clubController.register(createClubDTO);
 
-         var response = mockMvc.perform(post("/clubs")
-                 .contentType(MediaType.APPLICATION_JSON)
-                 .content(objectMapper.writeValueAsString(testDTO)))
-                 .andReturn().getResponse();
-
-        Assertions.assertEquals(201, response.getStatus());
-
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        verify(clubService).register(createClubDTO);
+        verify(clubController).register(createClubDTO);
 
     }
 
     @Test
     void listClub() throws Exception {
-       ListClubDTO club1 = new ListClubDTO(1L, "test2", State.PR, LocalDate.of(1984, 07, 23), true);
-       Page<ListClubDTO> page = new PageImpl<>(Collections.singletonList(club1), PageRequest.of(0, 5), 1);
+        ListClubDTO club1 = new ListClubDTO(1L, "test2", State.PR, LocalDate.of(1984, 07, 23), true);
+        Page<ListClubDTO> page = new PageImpl<>(Collections.singletonList(club1), PageRequest.of(0, 5), 1);
         var response = mockMvc.perform(get("/clubs")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("page", "0").param("size", "5"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("page", "0").param("size", "5"))
                 .andReturn().getResponse();
-        Assertions.assertEquals(200, response.getStatus());
+        assertEquals(200, response.getStatus());
 
 
     }
@@ -90,7 +99,7 @@ class ClubControllerTest {
         var response = mockMvc.perform(get("/clubs/1"))
                 .andReturn().getResponse();
 
-        Assertions.assertEquals(200, response.getStatus());
+        assertEquals(200, response.getStatus());
     }
 
     @Test
@@ -104,10 +113,10 @@ class ClubControllerTest {
         when(clubService.update(any(UpdateClubDTO.class))).thenReturn(testDTO);
         String jsonContent = objectMapper.writeValueAsString(testDTO);
         var response = mockMvc.perform(put("/clubs")
-                .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonContent))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonContent))
                 .andReturn().getResponse();
-        Assertions.assertEquals(200, response.getStatus());
+        assertEquals(200, response.getStatus());
     }
 
 
