@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MeliApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void match() {
 	}
 
 }

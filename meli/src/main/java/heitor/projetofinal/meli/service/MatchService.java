@@ -11,6 +11,7 @@ import heitor.projetofinal.meli.domain.match.high_search.*;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
+import heitor.projetofinal.meli.domain.stadium.Stadium;
 import heitor.projetofinal.meli.infra.excepetion.ValidationExcepetion;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -42,16 +43,16 @@ public class MatchService {
     private List<ValidationMatch> validationMatches;
 
     public CreateMatchDTO createMatch(CreateMatchDTO dto) {
-        var homeClub = clubRepository.findByName(dto.getHomeTeam())
+        Club homeClub = clubRepository.findByName(dto.getHomeTeam())
                 .orElseThrow(() -> new ValidationExcepetion("Home club not found: " + dto.getHomeTeam()));
-        var awayClub = clubRepository.findByName(dto.getAwayTeam())
+        Club awayClub = clubRepository.findByName(dto.getAwayTeam())
                 .orElseThrow(() -> new ValidationExcepetion("Away club not found: " + dto.getAwayTeam()));
 
         if (homeClub.getId().equals(awayClub.getId())) {
             throw new ValidationExcepetion("A match cannot be created between the same club.");
         }
 
-        var stadium = stadiumRepository.findByName(dto.getStadium())
+        Stadium stadium = stadiumRepository.findByName(dto.getStadium())
                 .orElseThrow(() -> new ValidationExcepetion("Stadium not found: " + dto.getStadium()));
 
         validationMatches.forEach( v  ->  v.validate(dto));
