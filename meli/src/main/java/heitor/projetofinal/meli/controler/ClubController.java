@@ -38,7 +38,7 @@ public class ClubController {
 
 
     @PostMapping
-    public ResponseEntity<CreateClubDTO> register(@RequestBody @Valid CreateClubDTO dto){
+    public ResponseEntity<CreateClubDTO> registeController(@RequestBody @Valid CreateClubDTO dto){
         CreateClubDTO clubDTO = clubService.register(dto);
         return  new ResponseEntity<>(clubDTO, HttpStatus.CREATED);
     }

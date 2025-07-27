@@ -13,7 +13,9 @@ import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,41 +37,42 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+
 class ClubControllerTest {
 
-    @Autowired
+    @Mock
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @Mock
     private ClubService clubService;
-    @Autowired
+    @Mock
     private ObjectMapper objectMapper;
 
-    @Autowired
+    @InjectMocks
+    private  ClubController clubController;
+
+    @Mock
     private ClubRepository clubRepository;
 
     private CreateClubDTO createClubDTO;
 
-    @Mock
-    private  ClubController clubController;
+
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         createClubDTO = new CreateClubDTO("Santos", State.SP, LocalDate.of(1954, 03, 12));
     }
 
     @Test
-    void register() throws Exception {
+    void register() {
+
         when(clubService.register(createClubDTO)).thenReturn(createClubDTO);
 
-        ResponseEntity<CreateClubDTO> response = clubController.register(createClubDTO);
+        ResponseEntity<CreateClubDTO> response = clubController.registeController(createClubDTO);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        verify(clubService).register(createClubDTO);
-        verify(clubController).register(createClubDTO);
-
+        assertEquals(createClubDTO, response.getBody());
     }
 
     @Test
