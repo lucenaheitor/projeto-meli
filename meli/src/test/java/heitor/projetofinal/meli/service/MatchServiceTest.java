@@ -2,10 +2,12 @@ package heitor.projetofinal.meli.service;
 
 import heitor.projetofinal.meli.controler.exception_match.ValidationMatch;
 import heitor.projetofinal.meli.domain.club.Club;
+import heitor.projetofinal.meli.domain.club.club_dto.UpdateClubDTO;
 import heitor.projetofinal.meli.domain.match.Match;
 import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
+import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -54,6 +56,7 @@ public class MatchServiceTest {
     private Stadium stadium;
     private Match match;
     private DetailMatchesDTO detailMatchesDTO;
+    private UpdateMatchDTO updateMatchDTO;
 
     @Mock
     private List<ValidationMatch> validationMatches;
@@ -69,6 +72,7 @@ public class MatchServiceTest {
         match = new Match( 1L, homeTeam, awayTeam, 3, 2, stadium, LocalDate.of(2025, 7, 23));
         listMatches = new ListMatches(1L, "homeTeam1", "awayTeam1",  1, 2, stadium.getName(), LocalDate.of(2025, 7, 23));
         detailMatchesDTO = new DetailMatchesDTO(1L, homeTeam.getName(), awayTeam.getName(), 3, 2, "stadiumTest", LocalDate.of(2025, 7, 23));
+        updateMatchDTO = new UpdateMatchDTO(1L, "STADIUMTESTUPDATE", LocalDate.of(2025, 7, 23));
 
 
     }
@@ -123,6 +127,23 @@ public class MatchServiceTest {
         assertEquals(detailMatchesDTO.getId(), result.getId());
         verify(matchesRepository, times(1)).findById(anyLong());
         verify(modelMapper, times(1)).map(any(Match.class), eq(DetailMatchesDTO.class));
+
+    }
+
+    @Test
+    void clubService_updateMatchTest(){
+        when(matchesRepository.getReferenceById(anyLong())).thenReturn(match);
+        when(modelMapper.map(any(Match.class), eq(UpdateMatchDTO.class))).thenReturn(updateMatchDTO);
+        when(matchesRepository.save(any(Match.class))).thenReturn(match);
+        when(modelMapper.map(any(UpdateMatchDTO.class), eq(Match.class))).thenReturn(match);
+
+
+        UpdateMatchDTO result = matchService.updateMatch(updateMatchDTO);
+
+        assertEquals(updateMatchDTO.getId(), result.getId());
+        verify(matchesRepository, times(1)).getReferenceById(anyLong());
+        verify(modelMapper, times(1)).map(any(Match.class), eq(UpdateMatchDTO.class));
+        verify(matchesRepository, times(1)).save(any(Match.class));
 
     }
 }

@@ -138,7 +138,7 @@ public class ClubServiceTest {
         assertThrows(RuntimeException.class, () -> clubService.delete(anyLong()));
 
         verify(clubRepository, never()).save(any());
-
     }
+
 
 }
