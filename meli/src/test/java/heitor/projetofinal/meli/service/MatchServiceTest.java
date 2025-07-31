@@ -144,6 +144,14 @@ public class MatchServiceTest {
         verify(matchesRepository, times(1)).getReferenceById(anyLong());
         verify(modelMapper, times(1)).map(any(Match.class), eq(UpdateMatchDTO.class));
         verify(matchesRepository, times(1)).save(any(Match.class));
+    }
 
+    @Test
+    void clubService_deleteMatchTest(){
+       Long id = 1L;
+
+       matchService.deleteMatch(id);
+
+       verify(matchesRepository, times(1)).deleteById(anyLong());
     }
 }
