@@ -101,7 +101,6 @@ public class MatchService {
         matchesRepository.deleteById(id);
   }
 
-
     public ClubRestrospectveDTO clubRestrospectve(Club club) {
         List<Match> matches = matchesRepository.findByHomeTeamOrAwayTeam(club, club);
 

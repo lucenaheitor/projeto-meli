@@ -8,6 +8,7 @@ import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
+import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,11 +149,48 @@ public class MatchServiceTest {
     }
 
     @Test
-    void clubService_deleteMatchTest(){
+    void matchService_deleteMatchTest(){
        Long id = 1L;
 
        matchService.deleteMatch(id);
 
        verify(matchesRepository, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    void matchService_ClubRestrospectveDTO(){
+        Club club = new Club();
+        club.setName("Clube de Teste");
+
+        Match partidaVitoria = new Match();
+        partidaVitoria.setHomeTeam(club);
+        partidaVitoria.setAwayTeam(new Club());
+        partidaVitoria.setHomeTeamScore(3);
+        partidaVitoria.setAwayTeamScore(1);
+
+        Match partidaEmpate = new Match();
+        partidaEmpate.setHomeTeam(new Club());
+        partidaEmpate.setAwayTeam(club);
+        partidaEmpate.setHomeTeamScore(2);
+        partidaEmpate.setAwayTeamScore(2);
+
+        Match partidaDerrota = new Match();
+        partidaDerrota.setHomeTeam(new Club());
+        partidaDerrota.setAwayTeam(club);
+        partidaDerrota.setHomeTeamScore(1);
+        partidaDerrota.setAwayTeamScore(0);
+
+        List<Match> partidas = Arrays.asList(partidaVitoria, partidaEmpate, partidaDerrota);
+
+        when(matchesRepository.findByHomeTeamOrAwayTeam(club, club)).thenReturn(partidas);
+
+        ClubRestrospectveDTO dto = matchService.clubRestrospectve(club);
+
+        assertEquals("Clube de Teste", dto.getClubName());
+        assertEquals(2, dto.getTotalWins());
+        assertEquals(1, dto.getTotalDraws());
+        assertEquals(0, dto.getTotalLosses());
+        assertEquals(6, dto.getTotalGoalsScored());
+        assertEquals(3, dto.getTotalGoalsConceded());
     }
 }
