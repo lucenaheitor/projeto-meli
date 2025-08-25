@@ -8,6 +8,8 @@ import heitor.projetofinal.meli.domain.match.dto_match.CreateMatchDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.DetailMatchesDTO;
 import heitor.projetofinal.meli.domain.match.dto_match.ListMatches;
 import heitor.projetofinal.meli.domain.match.dto_match.UpdateMatchDTO;
+import heitor.projetofinal.meli.domain.match.high_search.AdversaryRestrospectiveDTO;
+import heitor.projetofinal.meli.domain.match.high_search.ClubRestrospectveDTO;
 import heitor.projetofinal.meli.domain.repository.ClubRepository;
 import heitor.projetofinal.meli.domain.repository.MatchesRepository;
 import heitor.projetofinal.meli.domain.repository.StadiumRepository;
@@ -25,11 +27,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -163,7 +166,7 @@ public class MatchServiceTest {
 
         Match partidaVitoria = new Match();
         partidaVitoria.setHomeTeam(club);
-        partidaVitoria.setAwayTeam(new Club());
+        partidaVitoria.setAwayTeam(club);
         partidaVitoria.setHomeTeamScore(3);
         partidaVitoria.setAwayTeamScore(1);
 
@@ -174,7 +177,7 @@ public class MatchServiceTest {
         partidaEmpate.setAwayTeamScore(2);
 
         Match partidaDerrota = new Match();
-        partidaDerrota.setHomeTeam(new Club());
+        partidaDerrota.setHomeTeam(club);
         partidaDerrota.setAwayTeam(club);
         partidaDerrota.setHomeTeamScore(1);
         partidaDerrota.setAwayTeamScore(0);
@@ -192,4 +195,69 @@ public class MatchServiceTest {
         assertEquals(6, dto.getTotalGoalsScored());
         assertEquals(3, dto.getTotalGoalsConceded());
     }
+
+        @Test
+        void calcularRetrospectoContraAdversarios_ok() {
+            // given
+            Club club = new Club(); club.setName("test club");
+            Club rival = new Club(); rival.setName("Rival FC");
+
+            // 3 jogos: W(2x1 em casa), D(0x0 fora), L(1x3 em casa)
+            Match m1 = new Match();
+            m1.setHomeTeam(club); m1.setAwayTeam(rival);
+            m1.setHomeTeamScore(2); m1.setAwayTeamScore(1);
+
+            Match m2 = new Match();
+            m2.setHomeTeam(rival); m2.setAwayTeam(club);
+            m2.setHomeTeamScore(0); m2.setAwayTeamScore(0);
+
+            Match m3 = new Match();
+            m3.setHomeTeam(club); m3.setAwayTeam(rival);
+            m3.setHomeTeamScore(1); m3.setAwayTeamScore(3);
+
+            when(clubRepository.findByName("test club")).thenReturn(Optional.of(club));
+            // Use any(...) para não travar na instância
+            when(matchesRepository.findByHomeTeamOrAwayTeam(any(Club.class), any(Club.class)))
+                    .thenReturn(List.of(m1, m2, m3));
+
+            // when
+            List<AdversaryRestrospectiveDTO> resp =
+                    matchService.calcularRetrospectoContraAdversarios("test club");
+
+            // then (não dependa de índice — encontre pelo nome do adversário)
+            AdversaryRestrospectiveDTO rivalDto = resp.stream()
+                    .filter(d -> d.getAdversary().equals("Rival FC"))
+                    .findFirst()
+                    .orElseThrow();
+
+            assertEquals(1, rivalDto.getTotalWins());
+            assertEquals(0, rivalDto.getTotalDraws());
+            assertEquals(1, rivalDto.getTotalLosses());
+            assertEquals(3, rivalDto.getTotalGoalsScored());   // 2 + 0 + 1
+            assertEquals(4, rivalDto.getTotalGoalsConceded()); // 1 + 0 + 3
+
+            verify(matchesRepository).findByHomeTeamOrAwayTeam(any(Club.class), any(Club.class));
+        }
+
+        @Test
+        void calcularRetrospectoContraAdversarios_semPartidas_retornaVazio() {
+            Club club = new Club(); club.setName("test club");
+            when(clubRepository.findByName("test club")).thenReturn(Optional.of(club));
+            when(matchesRepository.findByHomeTeamOrAwayTeam(any(), any())).thenReturn(List.of());
+
+            List<AdversaryRestrospectiveDTO> resp =
+                    matchService.calcularRetrospectoContraAdversarios("test club");
+
+            assertTrue(resp.isEmpty());
+        }
+
+        @Test
+        void calcularRetrospectoContraAdversarios_clubeInexistente_lancaExcecao() {
+            when(clubRepository.findByName("nope")).thenReturn(Optional.empty());
+            assertThrows(IllegalArgumentException.class,
+                    () -> matchService.calcularRetrospectoContraAdversarios("nope"));
+        }
+
+
+
 }
